@@ -519,11 +519,13 @@ def render_sfx(cues, dur):
         elif k == 'chip':
             bus.add(t, sine(sweep(500 + 80 * c.get('i', 0), 1000 + 120 * c.get('i', 0), 0.07), 0.07) * env_ad(0.07, 0.002, 4), 0.18, 0.2)
         elif k == 'bar':
-            # столбики: восходящая гамма до мажора
-            scale = [72, 74, 76, 77, 79, 81, 83, 84, 86, 88]
-            m = scale[c.get('i', 0) % len(scale)]
-            s = (triangle(mtof(m), 0.3) + 0.4 * square(mtof(m), 0.3, 0.25)) * env_ad(0.3, 0.003, 5)
-            bus.add(t, s, 0.13, -0.4 + 0.08 * c.get('i', 0))
+            # столбики (27 штук): восходящая гамма до мажора; топ-10 — громче
+            scale = [72, 74, 76, 77, 79, 81, 83, 84, 86, 88, 89, 91, 93, 95, 96]
+            i = c.get('i', 0)
+            m = scale[i % len(scale)]
+            d = 0.22 if i < 10 else 0.12
+            s = (triangle(mtof(m), d) + 0.4 * square(mtof(m), d, 0.25)) * env_ad(d, 0.003, 5)
+            bus.add(t, s, 0.12 if i < 10 else 0.05, -0.6 + 1.2 * i / 26)
         elif k == 'gap':
             bus.add(t, blip(81, 0.08, 0.5), 0.08)
             bus.add(t + 0.1, blip(76, 0.12, 0.5), 0.08)

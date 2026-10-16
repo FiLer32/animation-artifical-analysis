@@ -1,11 +1,14 @@
 /* ==========================================================================
-   chart.js — диаграмма Intelligence Index в подаче artificialanalysis.ai:
-   белая карточка, serif-заголовок, пунктирная сетка, столбцы, отсортированные
-   по убыванию, цвет = лаборатория, значение внутри столбца, под столбцом —
-   значок лаборатории и наклонная подпись модели, «клеточка» для моделей
-   без публичного API. Логотипы НЕ копируются: вместо них — свои монограммы.
+   chart.js — НАСТОЯЩИЙ график Intelligence Index: скриншот с
+   artificialanalysis.ai (снимок от 16.10.2026, «27 of 704 models»).
 
-   Геометрия задаётся в координатах «мира» (#world, 1920×1080 при зуме 1).
+   Картинка показывается как есть; анимации живут в слоях поверх неё,
+   строго по координатам столбиков, снятым со скриншота
+   (assets/make_chart_assets.py):
+     • шторка роста — кусок «пустого» кадра без столбика уезжает вверх
+       и открывает настоящий столбик;
+     • затемнение — полупрозрачная белая вуаль над колонкой;
+     • подсветка, медали, корона — рамки и значки над столбиками.
    ========================================================================== */
 
 (function () {
@@ -13,107 +16,104 @@
 
   const D = window.AA_DATA;
 
-  // --- Геометрия (мировые координаты) ----------------------------------------
-  const G = {
-    cardX: 40, cardY: 90, cardW: 1420, cardH: 820,
-    plotX: 190,          // от левого края карточки до первого слота
-    baseY: 600,          // базовая линия внутри карточки
-    slot: 120,           // ширина слота
-    barW: 88,            // ширина столбца
-    pxPerPoint: 7        // пикселей на 1 балл
+  // --- Скриншот и координаты его столбиков (в пикселях скриншота) ----------
+  const SHOT = {
+    src: 'assets/aa-intelligence-index.png',
+    empty: 'assets/aa-intelligence-index-empty.png',
+    w: 2324, h: 1182,
+    baseY: 792,          // нижний край столбиков
+    labelStart: 836,     // под логотипами начинаются наклонные подписи
+    labelsBottom: 1000,  // нижний край наклонных подписей
+    // [левый x, правый x, верх y] — 27 столбиков слева направо
+    bars: [[116, 173, 425], [195, 253, 435], [275, 333, 436], [355, 412, 452], [434, 492, 456],
+      [514, 572, 457], [594, 652, 458], [673, 731, 462], [753, 811, 496], [833, 891, 497],
+      [913, 970, 502], [992, 1050, 504], [1072, 1130, 513], [1152, 1210, 514], [1231, 1289, 515],
+      [1311, 1369, 525], [1391, 1449, 531], [1471, 1528, 540], [1550, 1608, 544], [1630, 1688, 547],
+      [1710, 1767, 549], [1789, 1847, 577], [1869, 1927, 597], [1949, 2007, 598], [2028, 2086, 606],
+      [2108, 2166, 623], [2188, 2246, 633]]
   };
 
+  // --- Где карточка со скриншотом стоит в «мире» -----------------------------
+  const G = { cardX: 30, cardY: 130, cardW: 1440 };
+  G.s = G.cardW / SHOT.w;                       // масштаб скриншот → мир
+  G.cardH = Math.round(SHOT.h * G.s);
+
   const Chart = {
-    G,
+    G, SHOT,
     bars: [],
 
-    /** Центр столбца i (0..9) по x в мировых координатах. */
-    barCX(i) { return G.cardX + G.plotX + G.slot * i + G.slot / 2; },
-    /** Верх столбца i по y в мировых координатах. */
-    barTopY(i) { return G.cardY + G.baseY - D.models[i].score * G.pxPerPoint; },
-    baseWorldY() { return G.cardY + G.baseY; },
+    // --- геометрия в координатах карточки (px) --------------------------------
+    local(i) {
+      const [a, b, top] = SHOT.bars[i], s = G.s;
+      return { x0: a * s, x1: (b + 1) * s, cx: (a + b + 1) / 2 * s, top: top * s, base: (SHOT.baseY + 1) * s };
+    },
+    // --- и в координатах мира --------------------------------------------------
+    barCX(i) { return G.cardX + this.local(i).cx; },
+    barTopY(i) { return G.cardY + this.local(i).top; },
+    baseWorldY() { return G.cardY + (SHOT.baseY + 1) * G.s; },
+    labelsBottomY() { return G.cardY + SHOT.labelsBottom * G.s; },
 
     build() {
       const root = document.getElementById('chart');
       const card = document.createElement('div');
-      card.className = 'chart-card';
+      card.className = 'chart-card shot';
       Object.assign(card.style, {
         left: G.cardX + 'px', top: G.cardY + 'px',
         width: G.cardW + 'px', height: G.cardH + 'px'
       });
-
-      // Заголовок и подзаголовок — как на сайте
-      card.innerHTML = `
-        <div class="ch-title">${D.indexName}</div>
-        <div class="ch-sub">${D.indexVersion} · сводный балл из ${D.benchmarks.length} тестов · выше — лучше ·
-          топ-${D.models.length} из ${D.modelsOnChart} моделей на графике сайта</div>
-        <div class="ch-legend">
-          <span class="lg-item"><i class="lg-sw lg-check"></i>Нет публичного API</span>
-          ${Object.keys(D.labs).map(l =>
-            `<span class="lg-item"><i class="lg-sw" style="background:${D.labs[l].color}"></i>${l}</span>`
-          ).join('')}
-        </div>
-        <div class="ch-plot"></div>
-        <div class="ch-src">по данным ${D.sourceUrl} · ${D.date}</div>`;
+      card.innerHTML = `<img class="shot-img" src="${SHOT.src}" alt="${D.indexName} — скриншот artificialanalysis.ai, ${D.date}">
+        <div class="ch-over"></div>`;
       root.appendChild(card);
       this.card = card;
+      const over = card.querySelector('.ch-over');
+      this.over = over;
 
-      const plot = card.querySelector('.ch-plot');
+      SHOT.bars.forEach((_, i) => {
+        const L = this.local(i);
+        const w = L.x1 - L.x0;
 
-      // Пунктирная сетка (без подписей — как на сайте)
-      for (let v = 15; v <= D.axisMax; v += 15) {
-        const g = document.createElement('div');
-        g.className = 'ch-grid';
-        g.style.top = (G.baseY - v * G.pxPerPoint) + 'px';
-        plot.appendChild(g);
-      }
-      const base = document.createElement('div');
-      base.className = 'ch-grid ch-base';
-      base.style.top = G.baseY + 'px';
-      plot.appendChild(base);
-
-      // Столбцы
-      D.models.forEach((m, i) => {
-        const lab = D.labs[m.lab];
-        const col = document.createElement('div');
-        col.className = 'bar-col';
-        col.style.left = (G.plotX + G.slot * i) + 'px';
-        col.style.width = G.slot + 'px';
-
-        const h = m.score * G.pxPerPoint;
-        const bg = m.noApi
-          ? `repeating-conic-gradient(${lab.color} 0 25%, #5CB8FF 0 50%) 0 0 / 22px 22px`
-          : lab.color;
-
-        col.innerHTML = `
-          <div class="bar-medal"></div>
-          <div class="bar" style="height:${h}px; top:${G.baseY - h}px; left:${(G.slot - G.barW) / 2}px; width:${G.barW}px; background:${bg}">
-            <span class="bar-val" style="color:${lab.text}">0</span>
-          </div>
-          <div class="bar-lab" style="top:${G.baseY + 12}px; background:${lab.color}">${m.lab[0]}</div>
-          <div class="bar-name" style="top:${G.baseY + 58}px">
-            <span>${m.name}</span>${m.variant ? `<span class="bn-var">${m.variant}</span>` : ''}
-          </div>`;
-        plot.appendChild(col);
-
-        const medal = col.querySelector('.bar-medal');
-        medal.style.top = (G.baseY - h - 70) + 'px';
-
-        this.bars.push({
-          col,
-          bar: col.querySelector('.bar'),
-          val: col.querySelector('.bar-val'),
-          lab: col.querySelector('.bar-lab'),
-          name: col.querySelector('.bar-name'),
-          medal,
-          model: m
+        // шторка роста: кусок «пустого» кадра поверх столбика
+        const cover = document.createElement('div');
+        cover.className = 'bar-cover';
+        const top = L.top - 4 * G.s;
+        Object.assign(cover.style, {
+          left: (L.x0 - 2 * G.s) + 'px', top: top + 'px',
+          width: (w + 4 * G.s) + 'px', height: (L.base - top + G.s) + 'px',
+          backgroundImage: `url(${SHOT.empty})`,
+          backgroundSize: `${G.cardW}px ${G.cardH}px`,
+          backgroundPosition: `${-(L.x0 - 2 * G.s)}px ${-top}px`
         });
+
+        // вуаль затемнения: столбик + логотип под ним. Наклонные подписи
+        // не трогаем — они заходят на соседние колонки, и вуаль резала бы их пополам
+        const shade = document.createElement('div');
+        shade.className = 'bar-shade';
+        const w0 = 80 * G.s, yT = L.top - 30 * G.s;
+        Object.assign(shade.style, {
+          left: (L.cx - w0 / 2) + 'px', top: yT + 'px',
+          width: w0 + 'px', height: (SHOT.labelStart * G.s - yT) + 'px'
+        });
+
+        // рамка подсветки ровно по столбику
+        const hl = document.createElement('div');
+        hl.className = 'bar-hl';
+        Object.assign(hl.style, {
+          left: L.x0 + 'px', top: L.top + 'px', width: w + 'px', height: (L.base - L.top) + 'px'
+        });
+
+        // медаль над столбиком
+        const medal = document.createElement('div');
+        medal.className = 'bar-medal';
+        Object.assign(medal.style, { left: L.cx + 'px', top: (L.top - 44) + 'px' });
+
+        over.append(shade, cover, hl, medal);
+        this.bars.push({ cover, shade, bar: hl, medal, model: D.models[i] || null });
       });
 
-      // Корона над лидером (свой SVG)
+      // корона над лидером (свой SVG)
       const crown = document.createElement('div');
       crown.className = 'crown';
-      crown.innerHTML = `<svg viewBox="0 0 120 90" width="120" height="90">
+      crown.innerHTML = `<svg viewBox="0 0 120 90" width="56" height="42">
           <path d="M 10 80 L 4 22 L 34 46 L 60 6 L 86 46 L 116 22 L 110 80 Z"
                 fill="#FFC928" stroke="#3B1E14" stroke-width="6" stroke-linejoin="round"/>
           <rect x="10" y="68" width="100" height="14" rx="4" fill="#F5A300" stroke="#3B1E14" stroke-width="5"/>
@@ -121,35 +121,30 @@
           <circle cx="32" cy="58" r="6" fill="#5CB8FF" stroke="#3B1E14" stroke-width="3"/>
           <circle cx="88" cy="58" r="6" fill="#5CB8FF" stroke="#3B1E14" stroke-width="3"/>
         </svg>`;
-      const b0 = this.bars[0];
-      crown.style.left = (G.plotX + (G.slot - 120) / 2) + 'px';
-      crown.style.top = (G.baseY - b0.model.score * G.pxPerPoint - 104) + 'px';
-      plot.appendChild(crown);
+      const L0 = this.local(0);
+      Object.assign(crown.style, { left: (L0.cx - 28) + 'px', top: (L0.top - 50) + 'px' });
+      over.appendChild(crown);
       this.crown = crown;
 
-      // Начальное состояние: столбцы «сложены»
-      this.bars.forEach(b => {
-        gsap.set(b.bar, { scaleY: 0, transformOrigin: '50% 100%' });
-        gsap.set([b.lab, b.name], { autoAlpha: 0 });
-        gsap.set(b.medal, { autoAlpha: 0, scale: 0 });
-      });
+      // начальное состояние: столбики «спрятаны» под шторками
+      gsap.set(this.bars.map(b => b.cover), { scaleY: 1, transformOrigin: '50% 0%' });
+      gsap.set(this.bars.map(b => b.shade), { opacity: 0 });
+      gsap.set(this.bars.map(b => b.medal), { autoAlpha: 0, scale: 0, xPercent: -50 });
       gsap.set(crown, { autoAlpha: 0 });
     },
 
-    /**
-     * Анимация роста столбцов по очереди. counters — массив, куда
-     * складываются счётчики (их значения считает main.js от времени мастера).
-     */
-    grow(tl, at, stagger, absStart, counters) {
+    /** Рост столбиков слева направо: шторки уезжают вверх. */
+    grow(tl, at, stagger) {
       this.bars.forEach((b, i) => {
         const t = at + i * stagger;
-        tl.to(b.bar, { scaleY: 1, duration: 0.7, ease: 'back.out(1.6)' }, t);
-        Cues.cue(tl, t, 'bar', { i, score: b.model.score });
-        tl.fromTo(b.lab, { autoAlpha: 0, y: 20 }, { autoAlpha: 1, y: 0, duration: 0.3, ease: 'back.out(3)', immediateRender: false }, t + 0.15);
-        // подпись повёрнута через CSS, поэтому анимируем только прозрачность
-        tl.to(b.name, { autoAlpha: 1, duration: 0.3, ease: 'power2.out' }, t + 0.2);
-        counters.push({ el: b.val, to: b.model.score, start: absStart + t, dur: 0.7 });
+        tl.to(b.cover, { scaleY: 0, duration: 0.6, ease: 'power2.out' }, t);
+        Cues.cue(tl, t, 'bar', { i });
       });
+    },
+
+    /** Яркость колонок: 1 — как на скриншоте, меньше — тусклее. */
+    fade(tl, at, idx, brightness, dur = 0.3) {
+      tl.to(idx.map(i => this.bars[i].shade), { opacity: (1 - brightness) * 0.95, duration: dur }, at);
     }
   };
 

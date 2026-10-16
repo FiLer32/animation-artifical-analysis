@@ -48,11 +48,12 @@
   const Cam = {
     // Фокус на тройке лидеров (посчитан под геометрию chart.js)
     top3() {
-      const G = Chart.G;
-      const rx0 = Chart.barCX(0) - 210, rx1 = Chart.barCX(2) + 60;
-      const ry0 = Chart.barTopY(0) - 80, ry1 = G.cardY + G.cardH - 50;
+      const k = Chart.G.s;   // пиксели скриншота → мир
+      const rx0 = Chart.barCX(0) - 150 * k, rx1 = Chart.barCX(2) + 60 * k;
+      const ry0 = Chart.barTopY(0) - 110 * k, ry1 = Chart.labelsBottomY();
       const box = { x: 40, y: 30, w: 940, h: 1020 };
-      const s = Math.min(box.w / (rx1 - rx0), box.h / (ry1 - ry0));
+      // не сильнее ×2: скриншот 2324 px, при большем увеличении текст «поплывёт»
+      const s = Math.min(2, box.w / (rx1 - rx0), box.h / (ry1 - ry0));
       const cx = (rx0 + rx1) / 2, cy = (ry0 + ry1) / 2;
       return { scale: s, x: box.x + box.w / 2 - cx * s, y: box.y + box.h / 2 - cy * s };
     },
@@ -306,7 +307,7 @@
       gsap.set('#card1 .c-shine', { xPercent: -150 });
 
       // --- Подсветка столбцов ---
-      gsap.set('.bar', { boxShadow: '0 0 0 0px rgba(255,216,77,0), 0 0 0px 0px rgba(255,216,77,0)' });
+      gsap.set('.bar-hl', { boxShadow: '0 0 0 0px rgba(255,216,77,0), 0 0 0px 0px rgba(255,216,77,0)' });
 
       // --- Медали над столбцами №2 и №3 ---
       Chart.bars[1].medal.textContent = '2';
@@ -360,17 +361,15 @@
 
     /** Скобка «от №1 до №8 — N баллов» поверх диаграммы. */
     buildGapMarker() {
-      const G = Chart.G;
-      const plot = document.querySelector('.ch-plot');
-      const y1 = G.baseY - M[0].score * G.pxPerPoint;
-      const y8 = G.baseY - M[7].score * G.pxPerPoint;
-      const xL = G.plotX + 10, xR = G.plotX + G.slot * 8 + 6;
+      const plot = Chart.over;
+      const y1 = Chart.local(0).top, y8 = Chart.local(7).top;
+      const xL = Chart.local(0).x0 - 6, xR = Chart.local(7).x1 + 8;
       const gap = M[0].score - M[7].score;
       const g = document.createElement('div');
       g.className = 'gap-mark';
       g.innerHTML = `
         <div class="gm-line" style="left:${xL}px; top:${y1}px; width:${xR - xL}px"></div>
-        <div class="gm-line" style="left:${xR - 120}px; top:${y8}px; width:120px"></div>
+        <div class="gm-line" style="left:${Chart.local(7).x0 - 6}px; top:${y8}px; width:${xR - Chart.local(7).x0 + 6}px"></div>
         <div class="gm-arrow" style="left:${xR}px; top:${y1}px; height:${y8 - y1}px"></div>
         <div class="gm-label" style="left:${xR + 18}px; top:${(y1 + y8) / 2 - 24}px">${pts(gap)}</div>`;
       plot.appendChild(g);
@@ -506,7 +505,7 @@
       Crab.prop(tl, 0.6, 'mic');
 
       // столбики растут по очереди, счётчики набегают
-      Chart.grow(tl, 0.9, 0.32, absStart, counters);
+      Chart.grow(tl, 0.9, 0.12);
       // …а крабик бежит боком вдоль оси
       Crab.walk(tl, 1.0, 1400, 1072, 3.4, { ease: 'none' });
       Crab.hop(tl, 4.5, 1720, 1050, 900, { scale: 0.8, dur: 0.55 });
@@ -514,7 +513,7 @@
       const B = { x: 1490, y: 760, w: 410, tail: 'b', tx: 55 };
       say(tl, 0.95, 3.3, 'Вот он — рейтинг! Столбик — модель, цвет — лаборатория.', B);
       say(tl, 3.4, 5.6, 'Клетчатый столбик — у модели нет публичного API.', B);
-      tl.to(Chart.bars[2].bar, { scaleX: 1.12, duration: 0.2, yoyo: true, repeat: 3, ease: 'sine.inOut' }, 4.2);
+      tl.to(Chart.bars[2].bar, { boxShadow: '0 0 0 4px rgba(255,216,77,1), 0 0 26px 7px rgba(255,216,77,.9)', duration: 0.2, yoyo: true, repeat: 3, ease: 'sine.inOut' }, 4.2);
 
       // разрыв в топе
       Crab.emote(tl, 5.7, 'happy');
@@ -532,8 +531,7 @@
       const cam = Cam.top3();
       tl.to('#world', { x: cam.x, y: cam.y, scale: cam.scale, duration: 2.0, ease: 'power2.inOut' }, 8.0);
       Cues.cue(tl, 8.0, 'riser', { dur: 2.0 });
-      tl.to(Chart.bars.slice(3).map(b => b.col), { opacity: 0.18, duration: 1.0 }, 8.1);
-      tl.to(['.ch-legend', '.ch-sub', '.ch-title', '.ch-src'], { opacity: 0.25, duration: 1.0 }, 8.1);
+      Chart.fade(tl, 8.1, Chart.bars.map((b, i) => i).slice(3), 0.18, 1.0);
       return tl;
     },
 
@@ -559,8 +557,8 @@
       shake(tl, 0.6, 3, 1.0);
 
       // столбик №3 подсвечивается
-      tl.to([Chart.bars[0].col, Chart.bars[1].col], { opacity: 0.45, duration: 0.3 }, 1.8);
-      tl.to(bar3.bar, { boxShadow: '0 0 0 7px rgba(255,216,77,1), 0 0 60px 14px rgba(255,216,77,.9)', duration: 0.3 }, 1.8);
+      Chart.fade(tl, 1.8, [0, 1], 0.45);
+      tl.to(bar3.bar, { boxShadow: '0 0 0 4px rgba(255,216,77,1), 0 0 26px 7px rgba(255,216,77,.9)', duration: 0.3 }, 1.8);
       tl.to(bar3.medal, { autoAlpha: 1, scale: 1, duration: 0.5, ease: 'back.out(3)' }, 1.85);
       Cues.cue(tl, 1.85, 'medal', { rank: 3 });
       Cues.cue(tl, 1.9, 'reveal', { rank: 3 });
@@ -602,9 +600,9 @@
       speedlines(tl, 0.0, 16);
       tl.set('#card3', { autoAlpha: 0 }, 0.5);
       tl.to(bar3.bar, { boxShadow: '0 0 0 0px rgba(255,216,77,0), 0 0 0px 0px rgba(255,216,77,0)', duration: 0.3 }, 0.3);
-      tl.to(bar3.col, { opacity: 0.45, duration: 0.3 }, 0.35);
-      tl.to(bar2.col, { opacity: 1, duration: 0.3 }, 0.35);
-      tl.to(bar2.bar, { boxShadow: '0 0 0 7px rgba(255,216,77,1), 0 0 60px 14px rgba(255,216,77,.9)', duration: 0.3 }, 0.45);
+      Chart.fade(tl, 0.35, [2], 0.45);
+      Chart.fade(tl, 0.35, [1], 1);
+      tl.to(bar2.bar, { boxShadow: '0 0 0 4px rgba(255,216,77,1), 0 0 26px 7px rgba(255,216,77,.9)', duration: 0.3 }, 0.45);
       tl.to(bar2.medal, { autoAlpha: 1, scale: 1, duration: 0.5, ease: 'back.out(3)' }, 0.5);
       Cues.cue(tl, 0.5, 'medal', { rank: 2 });
 
@@ -644,7 +642,7 @@
 
       // затемнение
       tl.to(bar2.bar, { boxShadow: '0 0 0 0px rgba(255,216,77,0), 0 0 0px 0px rgba(255,216,77,0)', duration: 0.3 }, 0);
-      tl.to(bar1.col, { opacity: 1, duration: 0.3 }, 0);
+      Chart.fade(tl, 0, [0], 1);
       tl.to('#dim', { autoAlpha: 1, duration: 0.7 }, 0);
       Cues.cue(tl, 0, 'dark', { dur: 2.35 });
       Cues.cue(tl, 0.4, 'spot', { dur: 0.5 });
