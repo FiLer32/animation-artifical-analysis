@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Топ-3 ИИ-моделей по версии Artificial Analysis — рассказывает крабик Claude</title>
+
+  <!-- Шрифты с кириллицей: Nunito (округлый, дружелюбный) + PT Serif (заголовок графика) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&family=PT+Serif:wght@700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- Окно просмотра: сцена 1920×1080 масштабируется в него с letterbox -->
+<div id="viewport">
+  <div id="stage">
+    <!-- stageInner: трясётся камерой и «схлопывается» в точку в финале -->
+    <div id="stageInner">
+
+      <!-- WORLD: всё, что двигает «камера» (зум/панорама) -->
+      <div id="world">
+
+        <!-- Сцена 2: что такое Artificial Analysis (лежит ПОД сценой 1 — её открывает «шторка») -->
+        <section id="s2" class="scene">
+          <div class="s2-head">
+            <h2>Что такое <span class="accent">Artificial Analysis</span>?</h2>
+            <p>Независимая организация: <b>сама</b> прогоняет тесты и сравнивает ИИ-модели</p>
+          </div>
+          <div id="benchCards"></div>
+          <div class="s2-formula" id="s2Formula">
+            <span class="f-chip">10 тестов</span>
+            <span class="f-arrow">→</span>
+            <span class="f-chip f-main">Intelligence Index</span>
+            <span class="f-arrow">=</span>
+            <span class="f-chip">один сводный балл</span>
+          </div>
+        </section>
+
+        <!-- Сцена 1: интро -->
+        <section id="s1" class="scene">
+          <div class="sunburst"></div>
+          <div class="s1-title" id="s1Title">
+            <div class="t-top">ТОП-3</div>
+            <div class="t-mid">ИИ-моделей</div>
+            <div class="t-sub">по версии Artificial Analysis</div>
+          </div>
+        </section>
+
+        <!-- Сцена 3–6: диаграмма (строится chart.js) -->
+        <section id="s3" class="scene">
+          <div id="chart"></div>
+        </section>
+
+        <!-- Сцена 7: финал -->
+        <section id="s7" class="scene">
+          <div class="sunburst"></div>
+          <div class="s7-text">
+            <div class="s7-l1" id="s7L1">Бенчмарк — не всё.</div>
+            <div class="s7-l2" id="s7L2">Лучшая модель — та,<br>что решает <span class="accent">именно твою</span> задачу.</div>
+          </div>
+        </section>
+      </div>
+
+      <!-- Затемнение + прожектор (сцена «1 место») -->
+      <div id="dim"></div>
+      <div id="spotCone"></div>
+
+      <!-- HUD: карточки мест, барабан и прочее поверх мира -->
+      <div id="hud">
+        <div class="card" id="card3"></div>
+        <div class="card" id="card2"></div>
+        <div class="card card-gold" id="card1"></div>
+        <div id="drum"></div>
+      </div>
+
+      <!-- Крабик Claude (SVG строит crab.js) -->
+      <div id="crab"><div id="crabFlip"><div id="crabBob"></div></div></div>
+
+      <!-- Облачка с репликами -->
+      <div id="bubbles"></div>
+
+      <!-- Эффекты: конфетти, пыль, спидлайны, искры -->
+      <div id="fx"></div>
+
+      <!-- Переходы: пиксели и т.п. -->
+      <div id="transitions"></div>
+    </div>
+
+    <!-- Подпись об источнике — живёт поверх всего, не «схлопывается» -->
+    <div id="footer"></div>
+  </div>
+
+  <!-- Панель управления (прячется через 2 с бездействия) -->
+  <div id="controls">
+    <button id="btnPlay" title="Play / Pause (пробел)">❚❚</button>
+    <button id="btnRestart" title="С начала">↺</button>
+    <div id="seekWrap">
+      <input id="seek" type="range" min="0" max="60" step="0.01" value="0">
+      <div id="chapters"></div>
+    </div>
+    <span id="timer">0:00 / 1:00</span>
+    <button id="btnRec" title="Записать видео .webm">● Запись</button>
+  </div>
+  <div id="recHint"></div>
+</div>
+
+<!-- GSAP 3 (cdnjs). Скрипты — обычные теги, БЕЗ type="module",
+     чтобы всё работало двойным кликом по index.html (file://). -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="js/data.js"></script>
+<script src="js/crab.js"></script>
+<script src="js/chart.js"></script>
+<script src="js/scenes.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

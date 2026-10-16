@@ -1,0 +1,748 @@
+/* ==========================================================================
+   style.css — все стили ролика. Сцена всегда 1920×1080 и масштабируется
+   целиком через transform (см. main.js → fit()).
+   ========================================================================== */
+
+:root {
+  /* палитра */
+  --cream:      #FFF1DE;
+  --cream-2:    #FDF6EC;
+  --cream-3:    #FFF8EF;
+  --crab:       #D97757;
+  --crab-dark:  #BF5F40;
+  --ink:        #3B1E14;   /* толстые контуры и основной текст */
+  --ink-soft:   #7A4A38;
+  --gold:       #FFC928;
+  --red:        #E8463A;
+  --paper:      #FFFFFF;
+  --night:      #170F1E;   /* фон «за сценой» при схлопывании */
+
+  --font:  'Nunito', 'Segoe UI', system-ui, sans-serif;
+  --serif: 'PT Serif', Georgia, serif;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  height: 100%;
+  background: #000;
+  overflow: hidden;
+  font-family: var(--font);
+  -webkit-font-smoothing: antialiased;
+}
+body.nocursor, body.nocursor * { cursor: none !important; }
+
+/* --- Окно и сцена ------------------------------------------------------- */
+#viewport { position: fixed; inset: 0; }
+
+#stage {
+  position: absolute;
+  left: 0; top: 0;
+  width: 1920px; height: 1080px;
+  transform-origin: 0 0;
+  overflow: hidden;
+  background: var(--night);
+}
+
+#stageInner {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: var(--cream);
+  will-change: transform, clip-path;
+}
+
+#world {
+  position: absolute;
+  left: 0; top: 0;
+  width: 1920px; height: 1080px;
+  will-change: transform;
+}
+
+.scene {
+  position: absolute;
+  left: 0; top: 0;
+  width: 1920px; height: 1080px;
+  overflow: hidden;
+}
+
+.accent { color: var(--crab); }
+
+/* --- Лучи на фоне (интро и финал) ------------------------------------- */
+.sunburst {
+  position: absolute;
+  width: 2800px; height: 2800px;
+  left: calc(960px - 1400px);
+  top:  calc(540px - 1400px);
+  border-radius: 50%;
+  background: repeating-conic-gradient(from 0deg,
+              rgba(217, 119, 87, .11) 0deg 7.5deg,
+              rgba(217, 119, 87, 0) 7.5deg 15deg);
+  will-change: transform;
+}
+
+/* ========================================================================
+   СЦЕНА 1 — интро
+   ======================================================================== */
+#s1 { background: var(--cream); }
+
+.s1-title {
+  position: absolute;
+  left: 0; top: 46px;
+  width: 100%;
+  text-align: center;
+  line-height: 1;
+}
+.s1-title .t-top {
+  font-size: 210px;
+  font-weight: 900;
+  color: var(--crab);
+  -webkit-text-stroke: 12px var(--ink);
+  paint-order: stroke fill;
+  text-shadow: 0 14px 0 var(--ink);
+  letter-spacing: 4px;
+}
+.s1-title .t-mid {
+  display: inline-block;
+  margin-top: 14px;
+  font-size: 104px;
+  font-weight: 900;
+  color: var(--paper);
+  -webkit-text-stroke: 10px var(--ink);
+  paint-order: stroke fill;
+  text-shadow: 0 10px 0 var(--ink);
+}
+.s1-title .t-sub {
+  margin-top: 22px;
+  font-size: 40px;
+  font-weight: 800;
+  color: var(--ink-soft);
+}
+
+/* ========================================================================
+   СЦЕНА 2 — что такое Artificial Analysis
+   ======================================================================== */
+#s2 {
+  background-color: var(--cream-2);
+  background-image:
+    linear-gradient(rgba(59, 30, 20, .06) 2px, transparent 2px),
+    linear-gradient(90deg, rgba(59, 30, 20, .06) 2px, transparent 2px);
+  background-size: 48px 48px;
+}
+
+.s2-head {
+  position: absolute;
+  left: 600px; top: 64px;
+  width: 1260px;
+  color: var(--ink);
+}
+.s2-head h2 {
+  margin: 0;
+  font-size: 64px;
+  font-weight: 900;
+  line-height: 1.1;
+}
+.s2-head p {
+  margin: 12px 0 0;
+  font-size: 31px;
+  font-weight: 700;
+  color: var(--ink-soft);
+}
+
+.bc {
+  position: absolute;
+  width: 236px; height: 186px;
+  padding: 14px 12px;
+  background: var(--paper);
+  border: 5px solid var(--ink);
+  border-radius: 22px;
+  box-shadow: 0 8px 0 rgba(59, 30, 20, .18);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  color: var(--ink);
+}
+.bc svg { flex: none; }
+.bc-name {
+  margin-top: 6px;
+  font-size: 22px;
+  font-weight: 900;
+  line-height: 1.1;
+}
+.bc-ru {
+  margin-top: 6px;
+  font-size: 19px;
+  font-weight: 700;
+  line-height: 1.15;
+  color: var(--ink-soft);
+}
+
+.s2-formula {
+  position: absolute;
+  left: 600px; top: 690px;
+  width: 1260px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 18px;
+}
+.f-chip {
+  display: inline-block;
+  padding: 14px 28px;
+  font-size: 34px;
+  font-weight: 900;
+  color: var(--ink);
+  background: var(--paper);
+  border: 5px solid var(--ink);
+  border-radius: 999px;
+  box-shadow: 0 7px 0 rgba(59, 30, 20, .18);
+}
+.f-chip.f-main { background: var(--crab); color: var(--paper); }
+.f-arrow {
+  display: inline-block;
+  font-size: 54px;
+  font-weight: 900;
+  color: var(--ink);
+}
+
+/* ========================================================================
+   СЦЕНЫ 3–6 — диаграмма в подаче artificialanalysis.ai
+   ======================================================================== */
+#s3 {
+  background-color: var(--cream-3);
+  background-image: radial-gradient(rgba(217, 119, 87, .2) 2.5px, transparent 3px);
+  background-size: 36px 36px;
+}
+
+.chart-card {
+  position: absolute;
+  background: var(--paper);
+  border: 1px solid #E6DED4;
+  border-radius: 18px;
+  box-shadow: 0 22px 50px rgba(59, 30, 20, .12), 0 4px 0 rgba(59, 30, 20, .05);
+  color: #1D1D1F;
+}
+.ch-title {
+  position: absolute;
+  left: 40px; top: 26px;
+  font-family: var(--serif);
+  font-size: 42px;
+  font-weight: 700;
+}
+.ch-sub {
+  position: absolute;
+  left: 40px; top: 86px;
+  width: 1100px;
+  font-size: 22px;
+  font-weight: 600;
+  color: #8A8A8A;
+}
+.ch-src {
+  position: absolute;
+  right: 36px; top: 38px;
+  font-size: 20px;
+  font-weight: 700;
+  color: #A39C95;
+}
+.ch-legend {
+  position: absolute;
+  left: 40px; top: 128px;
+  display: flex;
+  gap: 24px;
+  font-size: 19px;
+  font-weight: 700;
+  color: #555;
+}
+.lg-sw {
+  display: inline-block;
+  width: 18px; height: 18px;
+  margin-right: 8px;
+  border-radius: 4px;
+  vertical-align: -3px;
+}
+.lg-check {
+  background: repeating-conic-gradient(#0089F4 0 25%, #5CB8FF 0 50%) 0 0 / 9px 9px;
+}
+
+.ch-plot { position: absolute; inset: 0; }
+.ch-grid {
+  position: absolute;
+  left: 150px; right: 30px;
+  border-top: 2px dashed #E3DED7;
+}
+.ch-grid.ch-base { border-top: 2px solid #D9D3CC; }
+
+.bar-col { position: absolute; top: 0; height: 100%; }
+.bar {
+  position: absolute;
+  border-radius: 8px 8px 0 0;
+  will-change: transform;
+}
+.bar-val {
+  position: absolute;
+  left: 0; right: 0;
+  top: 42%;
+  text-align: center;
+  font-size: 30px;
+  font-weight: 900;
+}
+.bar-lab {
+  position: absolute;
+  left: 50%;
+  width: 34px; height: 34px;
+  margin-left: -17px;
+  border-radius: 8px;
+  color: #fff;
+  font-size: 20px;
+  font-weight: 900;
+  line-height: 34px;
+  text-align: center;
+}
+.bar-name {
+  position: absolute;
+  right: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  white-space: nowrap;
+  transform: rotate(-40deg);
+  transform-origin: 100% 0;
+  font-size: 19px;
+  font-weight: 700;
+  line-height: 1.15;
+  color: #333;
+}
+.bar-name .bn-var { font-size: 16px; color: #888; }
+
+.bar-medal {
+  position: absolute;
+  left: 50%;
+  width: 60px; height: 60px;
+  margin-left: -30px;
+  border: 5px solid var(--ink);
+  border-radius: 50%;
+  font-size: 32px;
+  font-weight: 900;
+  line-height: 50px;
+  text-align: center;
+  color: var(--ink);
+  box-shadow: 0 5px 0 rgba(59, 30, 20, .25);
+}
+.medal-2 { background: #D5DCE4; }
+.medal-3 { background: #E5A56A; }
+
+.crown { position: absolute; width: 120px; height: 90px; }
+
+.gap-mark { position: absolute; inset: 0; pointer-events: none; }
+.gm-line { position: absolute; border-top: 3px dashed var(--red); }
+.gm-arrow {
+  position: absolute;
+  width: 0;
+  border-left: 4px solid var(--red);
+  margin-left: -2px;
+}
+.gm-arrow::before, .gm-arrow::after {
+  content: '';
+  position: absolute;
+  left: -10px;
+  border: 8px solid transparent;
+}
+.gm-arrow::before { top: -2px;   border-bottom: 12px solid var(--red); border-top: 0; }
+.gm-arrow::after  { bottom: -2px; border-top: 12px solid var(--red); border-bottom: 0; }
+.gm-label {
+  position: absolute;
+  padding: 6px 14px;
+  border-radius: 12px;
+  background: var(--red);
+  color: #fff;
+  font-size: 26px;
+  font-weight: 900;
+  white-space: nowrap;
+  transform-origin: 0 50%;
+}
+
+/* --- Затемнение и прожектор (1 место) ---------------------------------- */
+/* Слой затемнения с «дыркой» прожектора. Он маленький (1280×720) и
+   масштабируется ×3, поэтому всегда накрывает экран; двигается только
+   transform — без перерисовки градиента на каждом кадре. */
+#dim {
+  position: absolute;
+  left: 0; top: 0;
+  width: 1280px; height: 720px;
+  pointer-events: none;
+  will-change: transform, opacity;
+  background: radial-gradient(66.7px 186.7px at 50% 50%,
+              rgba(12, 9, 28, 0) 0%, rgba(12, 9, 28, 0) 64%, rgba(12, 9, 28, .86) 100%);
+}
+#spotCone {
+  position: absolute;
+  top: 0;
+  width: 520px;
+  pointer-events: none;
+  background: linear-gradient(to bottom, rgba(255, 240, 180, .32), rgba(255, 240, 180, .03));
+  clip-path: polygon(42% 0, 58% 0, 100% 100%, 0 100%);
+  will-change: transform, opacity;
+}
+
+/* --- HUD: карточки мест ------------------------------------------------ */
+#hud { position: absolute; inset: 0; pointer-events: none; }
+
+.card {
+  position: absolute;
+  padding: 24px 30px 26px;
+  background: var(--paper);
+  border: 6px solid var(--ink);
+  border-radius: 30px;
+  box-shadow: 0 14px 0 rgba(59, 30, 20, .22);
+  color: var(--ink);
+  overflow: hidden;
+  will-change: transform, opacity;
+}
+.card-gold {
+  background: linear-gradient(180deg, #FFFDF2, #FFF2C2);
+  box-shadow: 0 14px 0 rgba(59, 30, 20, .22), 0 0 70px rgba(255, 201, 40, .75);
+}
+.c-place {
+  display: inline-block;
+  padding: 6px 18px;
+  border-radius: 12px;
+  border: 4px solid var(--ink);
+  font-size: 28px;
+  font-weight: 900;
+  color: #fff;
+  -webkit-text-stroke: 5px var(--ink);
+  paint-order: stroke fill;
+}
+.c-place-1 { background: #F2B200; }
+.c-place-2 { background: #9AA6B4; }
+.c-place-3 { background: #C9803F; }
+.c-name {
+  margin-top: 14px;
+  font-size: 44px;
+  font-weight: 900;
+  line-height: 1.05;
+}
+.c-var {
+  margin-top: 4px;
+  font-size: 22px;
+  font-weight: 700;
+  color: #8A7A70;
+}
+.c-lab {
+  margin-top: 10px;
+  font-size: 26px;
+  font-weight: 700;
+}
+.c-lab i {
+  display: inline-block;
+  width: 22px; height: 22px;
+  margin-right: 10px;
+  border-radius: 6px;
+  vertical-align: -3px;
+}
+.c-score {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 4px;
+}
+.c-num {
+  font-size: 120px;
+  font-weight: 900;
+  line-height: 1;
+  color: var(--crab);
+  -webkit-text-stroke: 8px var(--ink);
+  paint-order: stroke fill;
+  min-width: 140px;
+}
+.c-unit {
+  font-size: 22px;
+  font-weight: 800;
+  line-height: 1.2;
+  color: var(--ink-soft);
+}
+.c-tie {
+  margin: 8px 0 0;
+  padding: 6px 12px;
+  border-radius: 10px;
+  background: #FFF1DE;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: #8A5A40;
+}
+.c-facts {
+  margin: 14px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.c-facts li {
+  position: relative;
+  margin-bottom: 8px;
+  padding-left: 32px;
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.25;
+}
+.c-facts li::before {
+  content: '★';
+  position: absolute;
+  left: 0; top: -1px;
+  color: var(--crab);
+  font-size: 24px;
+}
+.c-shine {
+  position: absolute;
+  top: 0; left: 0;
+  width: 40%; height: 100%;
+  background: linear-gradient(100deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, .85), rgba(255, 255, 255, 0));
+  pointer-events: none;
+}
+
+#drum { position: absolute; width: 200px; height: 130px; }
+
+/* --- Крабик ------------------------------------------------------------ */
+#crab {
+  position: absolute;
+  left: 0; top: 0;
+  width: 400px; height: 340px;
+  will-change: transform;
+}
+#crabFlip, #crabBob { width: 100%; height: 100%; }
+.crab-svg { display: block; overflow: visible; }
+
+/* --- Облачка ----------------------------------------------------------- */
+#bubbles { position: absolute; inset: 0; pointer-events: none; }
+
+.bubble {
+  position: absolute;
+  width: max-content;
+  padding: 18px 28px 20px;
+  background: var(--paper);
+  border: 5px solid var(--ink);
+  border-radius: 34px;
+  box-shadow: 0 8px 0 rgba(59, 30, 20, .18);
+  font-size: 34px;
+  font-weight: 800;
+  line-height: 1.25;
+  color: var(--ink);
+}
+.bubble .w { display: inline-block; white-space: nowrap; }
+.bubble .ch { opacity: 0; }
+
+/* хвостик снизу */
+.bubble.tail-b::before,
+.bubble.tail-b::after {
+  content: '';
+  position: absolute;
+  left: var(--tx);
+  border-style: solid;
+  border-color: transparent;
+}
+.bubble.tail-b::before {
+  bottom: -33px;
+  margin-left: -20px;
+  border-width: 30px 20px 0 20px;
+  border-top-color: var(--ink);
+}
+.bubble.tail-b::after {
+  bottom: -22px;
+  margin-left: -13px;
+  border-width: 21px 13px 0 13px;
+  border-top-color: var(--paper);
+}
+/* хвостик слева */
+.bubble.tail-l::before,
+.bubble.tail-l::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  border-style: solid;
+  border-color: transparent;
+}
+.bubble.tail-l::before {
+  left: -33px;
+  margin-top: -20px;
+  border-width: 20px 30px 20px 0;
+  border-right-color: var(--ink);
+}
+.bubble.tail-l::after {
+  left: -22px;
+  margin-top: -13px;
+  border-width: 13px 21px 13px 0;
+  border-right-color: var(--paper);
+}
+
+/* --- Эффекты ----------------------------------------------------------- */
+#fx { position: absolute; inset: 0; pointer-events: none; }
+.fx { position: absolute; left: 0; top: 0; will-change: transform, opacity; }
+.dust { border-radius: 50%; background: #EADBC8; }
+.spark {
+  width: 34px; height: 7px;
+  border-radius: 4px;
+  background: var(--gold);
+  border: 2px solid var(--ink);
+  transform-origin: 0 50%;
+}
+.snaptext {
+  font-size: 40px;
+  font-weight: 900;
+  color: var(--red);
+  -webkit-text-stroke: 6px var(--ink);
+  paint-order: stroke fill;
+  white-space: nowrap;
+}
+.conf { border-radius: 3px; }
+.speed {
+  height: 6px;
+  border-radius: 3px;
+  background: linear-gradient(90deg, rgba(59, 30, 20, .45), rgba(59, 30, 20, 0));
+}
+.final-dot {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: var(--crab);
+  box-shadow: 0 0 30px 8px rgba(255, 179, 138, .8);
+}
+
+#transitions { position: absolute; inset: 0; pointer-events: none; }
+.tile { position: absolute; width: 122px; height: 122px; }
+
+/* ========================================================================
+   СЦЕНА 7 — финал
+   ======================================================================== */
+#s7 { background: var(--cream); }
+.s7-text {
+  position: absolute;
+  left: 720px; top: 300px;
+  width: 1150px;
+  color: var(--ink);
+}
+.s7-l1 {
+  font-size: 88px;
+  font-weight: 900;
+  color: var(--crab);
+  -webkit-text-stroke: 10px var(--ink);
+  paint-order: stroke fill;
+  text-shadow: 0 9px 0 var(--ink);
+}
+.s7-l2 {
+  margin-top: 30px;
+  font-size: 58px;
+  font-weight: 900;
+  line-height: 1.2;
+}
+.s7-l2 .accent {
+  color: var(--ink);
+  background: linear-gradient(transparent 58%, var(--gold) 58%);
+  padding: 0 6px;
+}
+
+/* --- Подпись источника ------------------------------------------------- */
+#footer {
+  position: absolute;
+  left: 0; right: 0; bottom: 20px;
+  text-align: center;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--ink-soft);
+  pointer-events: none;
+}
+
+/* ========================================================================
+   Панель управления (вне сцены, не попадает в масштаб)
+   ======================================================================== */
+#controls {
+  position: fixed;
+  left: 50%; bottom: 18px;
+  transform: translateX(-50%);
+  width: min(980px, 94vw);
+  padding: 30px 16px 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(20, 14, 24, .84);
+  backdrop-filter: blur(8px);
+  border-radius: 16px;
+  color: #fff;
+  font-family: var(--font);
+  transition: opacity .4s ease;
+  z-index: 10;
+}
+#controls.hidden { opacity: 0; pointer-events: none; }
+body.recording #controls { display: none; }
+
+#controls button {
+  flex: none;
+  padding: 8px 14px;
+  border: 0;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, .12);
+  color: #fff;
+  font: 800 17px var(--font);
+  cursor: pointer;
+}
+#controls button:hover { background: rgba(255, 255, 255, .22); }
+#btnPlay { min-width: 48px; }
+#btnRec { color: #FF6B6B !important; }
+
+#seekWrap { position: relative; flex: 1; }
+#seek { width: 100%; accent-color: var(--crab); cursor: pointer; }
+
+#chapters { position: absolute; left: 0; right: 0; top: -24px; height: 20px; }
+#controls .chap {
+  position: absolute;
+  top: 0;
+  width: 14px; height: 20px;
+  margin-left: -7px;
+  padding: 0;
+  background: transparent;
+}
+#controls .chap::before {
+  content: '';
+  position: absolute;
+  left: 6px; top: 8px;
+  width: 3px; height: 12px;
+  border-radius: 2px;
+  background: var(--crab);
+}
+#controls .chap span {
+  position: absolute;
+  bottom: 22px; left: 50%;
+  transform: translateX(-50%);
+  padding: 3px 8px;
+  border-radius: 6px;
+  background: #000;
+  font-size: 13px;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity .15s;
+  pointer-events: none;
+}
+#controls .chap:hover span { opacity: 1; }
+
+#timer {
+  flex: none;
+  min-width: 96px;
+  text-align: center;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+#recHint {
+  position: fixed;
+  left: 50%; top: 18px;
+  transform: translateX(-50%);
+  padding: 10px 18px;
+  border-radius: 12px;
+  background: rgba(20, 14, 24, .9);
+  color: #fff;
+  font: 700 16px var(--font);
+  opacity: 0;
+  transition: opacity .3s;
+  pointer-events: none;
+  z-index: 11;
+}
+#recHint.show { opacity: 1; }
