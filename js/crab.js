@@ -254,6 +254,7 @@
       tl.to(this.$('.leg-a'), { y: -14, duration: step, yoyo: true, repeat: n * 2 - 1, ease: 'steps(2)' }, at);
       tl.to(this.$('.leg-b'), { y: -14, duration: step, yoyo: true, repeat: n * 2 - 1, ease: 'steps(2)' }, at + step);
       tl.to(this.flip, { y: -8, duration: step, yoyo: true, repeat: n * 2 - 1, ease: 'sine.inOut' }, at);
+      Cues.cue(tl, at, 'walk', { dur: +dur.toFixed(3), step });
     },
 
     /** Прыжок по дуге с приземлением (squash & stretch).
@@ -261,6 +262,7 @@
     hop(tl, at, cx, feetY, peakFeetY, opts = {}) {
       const dur = opts.dur || 0.6;
       const target = this.pos(cx, feetY, opts.scale);
+      Cues.cue(tl, at + 0.1, 'jump', { dur });
       tl.to(this.flip, { scaleY: 0.8, scaleX: 1.15, duration: 0.1, ease: 'power2.out' }, at);
       tl.to(this.el, { x: target.x, duration: dur, ease: 'none' }, at + 0.1);
       if (opts.scale != null) tl.to(this.el, { scale: opts.scale, duration: dur, ease: 'power1.inOut' }, at + 0.1);
@@ -274,6 +276,7 @@
     /** Приземление: сплющивание и отскок. */
     land(tl, at) {
       tl.to(this.flip, { scaleY: 0.78, scaleX: 1.2, duration: 0.08, ease: 'power2.out' }, at);
+      Cues.cue(tl, at, 'land');
       tl.to(this.flip, { scaleY: 1, scaleX: 1, duration: 0.5, ease: 'elastic.out(1.1, 0.35)' }, at + 0.08);
     },
 
@@ -307,6 +310,7 @@
     _emos: [],
     emote(tl, at, name) {
       this._emos.push({ tl, at, name });
+      if (name === 'surprised') Cues.cue(tl, at, 'boing');
       // маленький «поп» лица при смене эмоции (явные значения — безопасно для перемотки)
       tl.fromTo('#cr-face', { y: 0 }, {
         y: -6, duration: 0.08, yoyo: true, repeat: 1, immediateRender: false
@@ -360,6 +364,7 @@
       const t = side === 'both' ? this.$('.pincer') : this.$('#cr-pin' + side);
       for (let i = 0; i < times; i++) {
         tl.to(t, { y: -14, duration: 0.06, yoyo: true, repeat: 1, ease: 'power2.in' }, at + i * 0.18);
+        Cues.cue(tl, at + i * 0.18 + 0.06, 'snap');
       }
     },
 
@@ -377,6 +382,7 @@
         tl.to('#cr-armR', { rotation: -75, duration: 0.09, yoyo: true, repeat: 1, ease: 'power2.in' }, t);
         tl.to('#cr-armL', { rotation: 75, duration: 0.09, yoyo: true, repeat: 1, ease: 'power2.in' }, t);
         tl.to(this.$('.pincer'), { y: -10, duration: 0.09, yoyo: true, repeat: 1 }, t);
+        Cues.cue(tl, t + 0.09, 'clap', { n: i });
       }
       this.arm(tl, at + 0.25 + count * 0.26, 'both', 0, 0.3, 'power2.out');
     },
@@ -400,6 +406,7 @@
     /** Показать / спрятать реквизит (pointer, glasses, mic, sign, popper, sticks). */
     prop(tl, at, name, on = true) {
       const t = name === 'sticks' ? this.$('.cr-stick') : '#cr-' + name;
+      Cues.cue(tl, at, on ? 'prop' : 'propoff', { name });
       if (on) tl.to(t, { autoAlpha: 1, scale: 1, duration: 0.35, ease: 'back.out(3)' }, at);
       else tl.to(t, { autoAlpha: 0, scale: 0.2, duration: 0.2, ease: 'power2.in' }, at);
     }

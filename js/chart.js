@@ -144,6 +144,7 @@
       this.bars.forEach((b, i) => {
         const t = at + i * stagger;
         tl.to(b.bar, { scaleY: 1, duration: 0.7, ease: 'back.out(1.6)' }, t);
+        Cues.cue(tl, t, 'bar', { i, score: b.model.score });
         tl.fromTo(b.lab, { autoAlpha: 0, y: 20 }, { autoAlpha: 1, y: 0, duration: 0.3, ease: 'back.out(3)', immediateRender: false }, t + 0.15);
         // подпись повёрнута через CSS, поэтому анимируем только прозрачность
         tl.to(b.name, { autoAlpha: 1, duration: 0.3, ease: 'power2.out' }, t + 0.2);

@@ -59,6 +59,26 @@ Terminal-Bench 4.0, SciCode, Humanity's Last Exam, GDP.pdf, CritPt, AA-Omniscien
 
 Нужен MP4? Сконвертируйте файл: `ffmpeg -i top3.webm -c:v libx264 -crf 18 -pix_fmt yuv420p top3.mp4`
 
+## Звук
+
+Готовое видео со звуком: `video/top3-ai-artificial-analysis.mp4` (H.264 + AAC, 60 с).
+
+Звук целиком синтезируется на **Python** (только numpy), в браузере ничего не играет:
+
+1. **Разметка.** Анимации отмечают звуковые события через `Cues.cue(...)` из `js/cues.js`:
+   прыжки, щелчки, печать текста, переходы, барабанную дробь, корону, конфетти и т.д.
+2. **Выгрузка.** `node audio/export_cues.js` сохраняет события с абсолютным временем
+   в `audio/cues.json`. Нужен Playwright: `npm i -D playwright && npx playwright install chromium`.
+3. **Синтез.** `python3 audio/make_audio.py` пишет `audio/soundtrack.wav` (48 кГц, стерео):
+   - чиптюн-музыка 120 BPM: аккорды I–V–vi–IV, бас-треугольник, арпеджио, мелодия, шумовые барабаны.
+     Аранжировка меняется по сценам: разгон перед дробью, тёмная пауза перед 1 местом,
+     фанфары, разрешение в тонику к финальному щелчку;
+   - эффекты, привязанные к событиям с точностью до сэмпла.
+4. **Вклейка в видео.** `python3 audio/make_audio.py --mux video/top3-ai-artificial-analysis.mp4`
+   добавляет дорожку через ffmpeg, видео не перекодируется.
+
+Если поменялись тайминги в сценах, повторите шаги 2–4: звук подстроится сам.
+
 ## Как обновить цифры, если рейтинг изменится
 
 Все цифры лежат **только в `js/data.js`**:
@@ -86,10 +106,15 @@ Terminal-Bench 4.0, SciCode, Humanity's Last Exam, GDP.pdf, CritPt, AA-Omniscien
 index.html        разметка сцены и панели управления
 css/style.css     все стили, CSS-переменные цветов
 js/data.js        данные бенчмарка — единственное место с цифрами
+js/cues.js        разметка звуковых событий (сам звук — в audio/make_audio.py)
 js/crab.js        пиксельный SVG-крабик: моргание, ходьба боком, щелчки, эмоции, реквизит
 js/chart.js       диаграмма Intelligence Index в подаче artificialanalysis.ai
 js/scenes.js      scene1()…scene7(), каждая возвращает gsap.timeline(), плюс эффекты и облачка
 js/main.js        мастер-таймлайн с метками, масштабирование, управление, запись
+audio/export_cues.js  выгрузка звуковых событий в audio/cues.json
+audio/make_audio.py   синтез музыки и эффектов на numpy, вклейка в видео
+audio/cues.json       события ролика с абсолютным временем
+video/…mp4            готовое видео 1920×1080, 60 fps, со звуком
 ```
 
 ### Тайминг

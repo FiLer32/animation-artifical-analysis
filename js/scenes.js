@@ -103,10 +103,12 @@
     gsap.set(el, { yPercent: -100, autoAlpha: 0, scale: 0.3, transformOrigin: origin });
 
     tl.to(el, { autoAlpha: 1, scale: 1, duration: 0.3, ease: 'back.out(2.2)' }, at);
+    Cues.cue(tl, at, 'bubble');
     let t = at + 0.15;
     segChars.forEach((chars, i) => {
       if (i) t += 0.25; // пауза между частями
       tl.to(chars, { opacity: 1, duration: 0.01, stagger: TYPE }, t);
+      Cues.cue(tl, t, 'type', { n: chars.length, rate: TYPE });
       t += chars.length * TYPE;
     });
     // лёгкая тряска на восклицаниях
@@ -114,6 +116,7 @@
       tl.to(el, { keyframes: { rotation: [0, -3, 3, -2, 2, 0] }, duration: 0.35 }, t);
     }
     tl.to(el, { autoAlpha: 0, scale: 0.85, duration: 0.2, ease: 'power2.in' }, end - 0.2);
+    Cues.cue(tl, end - 0.2, 'unbubble');
     return el;
   }
 
@@ -164,6 +167,7 @@
 
   /** Взрыв конфетти из точки (хлопушка). */
   function confettiBurst(tl, at, ox, oy, n = 70) {
+    Cues.cue(tl, at, 'pop');
     for (let i = 0; i < n; i++) {
       const w = rr(12, 22), h = rr(8, 14);
       const e = fxEl('conf', { width: w + 'px', height: h + 'px', background: CONF[i % CONF.length] });
@@ -180,6 +184,7 @@
 
   /** Конфетти-дождь сверху. */
   function confettiRain(tl, at, n = 70, dur = 1.4) {
+    Cues.cue(tl, at, 'sparkle', { dur: dur + 2.5 });
     for (let i = 0; i < n; i++) {
       const w = rr(12, 20), h = rr(8, 14);
       const e = fxEl('conf', { width: w + 'px', height: h + 'px', background: CONF[(i + 3) % CONF.length] });
@@ -193,6 +198,7 @@
 
   /** Спидлайны (для «смахивания»). */
   function speedlines(tl, at, n = 16) {
+    Cues.cue(tl, at, 'whoosh', { dur: 0.45 });
     for (let i = 0; i < n; i++) {
       const w = rr(300, 900);
       const e = fxEl('speed', { width: w + 'px' });
@@ -205,6 +211,7 @@
 
   /** Тряска камеры. */
   function shake(tl, at, amp = 12, dur = 0.35) {
+    Cues.cue(tl, at, 'impact', { amp, dur });
     tl.to('#stageInner', {
       keyframes: { x: [0, -amp, amp * 0.8, -amp * 0.6, amp * 0.4, 0], y: [0, amp * 0.5, -amp * 0.6, amp * 0.4, -amp * 0.2, 0] },
       duration: dur, ease: 'none'
@@ -404,6 +411,8 @@
 
       // заголовок вылетает с отскоком
       tl.to('#s1Title .t-top', { y: 0, duration: 0.9, ease: 'bounce.out' }, 0.7);
+      Cues.cue(tl, 0.7, 'titlebounce', { dur: 0.9 });
+      Cues.cue(tl, 1.3, 'boing');
       tl.to('#s1Title .t-mid', { scale: 1, rotation: -3, duration: 0.8, ease: 'elastic.out(1, 0.45)' }, 1.3);
       tl.to('#s1Title .t-sub', { autoAlpha: 1, y: 0, duration: 0.4, ease: 'back.out(2)' }, 1.8);
 
@@ -432,6 +441,8 @@
       tl.set('#s1', { boxShadow: '30px 0 50px rgba(59,30,20,.35)' }, 0);
       Crab.snap(tl, 0.1, 'R', 1);
       tl.to('#s1', { x: (st.cx + 196) - 1920, duration: 0.85, ease: 'power1.inOut' }, 0.2);
+      Cues.cue(tl, 0.2, 'curtain', { dur: 0.85 });
+      Cues.cue(tl, 1.05, 'whoosh', { dur: 0.25 });
       Crab.walk(tl, 0.2, st.cx, st.feetY, 0.85, { ease: 'power1.inOut' });
       tl.to('#s1', { x: -1980, duration: 0.25, ease: 'power2.in' }, 1.05);
       tl.set('#s1', { autoAlpha: 0 }, 1.3);
@@ -450,6 +461,7 @@
         x: 0, y: 0, rotation: (i) => (i % 2 ? 2.5 : -2.5), scale: 1, autoAlpha: 1,
         duration: 0.6, ease: 'back.out(1.7)', stagger: 0.11
       }, 2.4);
+      D.benchmarks.forEach((b, i) => Cues.cue(tl, 2.4 + i * 0.11, 'card', { i }));
       Crab.arm(tl, 2.3, 'R', 12, 0.3);
       Crab.arm(tl, 3.5, 'R', 0, 0.3);
 
@@ -458,6 +470,7 @@
       tl.to('.s2-formula .f-chip, .s2-formula .f-arrow', {
         autoAlpha: 1, scale: 1, duration: 0.45, ease: 'back.out(3)', stagger: 0.12
       }, 4.0);
+      for (let i = 0; i < 5; i++) Cues.cue(tl, 4.0 + i * 0.12, 'chip', { i });
       tl.to('.s2-formula .f-main', { scale: 1.12, duration: 0.25, yoyo: true, repeat: 1 }, 4.8);
       Crab.prop(tl, 5.9, 'pointer', false);
 
@@ -482,6 +495,7 @@
       tl.set('#s3', { autoAlpha: 1, clipPath: `circle(0px at ${eye.x}px ${eye.y}px)` }, 0);
       tl.to('#cr-eyeR', { scale: 1.4, duration: 0.15, yoyo: true, repeat: 1, transformOrigin: '50% 50%' }, 0);
       tl.to('#s3', { clipPath: `circle(2300px at ${eye.x}px ${eye.y}px)`, duration: 0.75, ease: 'power2.in' }, 0.1);
+      Cues.cue(tl, 0.1, 'iris', { dur: 0.75 });
       tl.set('#s3', { clipPath: 'none' }, 0.86);
       tl.set('#s2', { autoAlpha: 0 }, 0.86);
 
@@ -506,6 +520,7 @@
       Crab.emote(tl, 5.7, 'happy');
       Crab.look(tl, 5.7, -10, -6);
       tl.to(this.gapMark, { autoAlpha: 1, duration: 0.3 }, 5.8);
+      Cues.cue(tl, 5.9, 'gap');
       tl.fromTo(this.gapMark.querySelector('.gm-label'), { scale: 0 }, { scale: 1, duration: 0.4, ease: 'back.out(3)', immediateRender: false }, 5.9);
       say(tl, 5.7, 8.1, `От №1 до №8 — всего ${pts(this.gap)}. Толкучка, как в метро в час пик!`, B);
       tl.to(this.gapMark, { autoAlpha: 0, duration: 0.3 }, 7.9);
@@ -516,6 +531,7 @@
       say(tl, 8.2, 10.1, 'Приближаю тройку лидеров…', B);
       const cam = Cam.top3();
       tl.to('#world', { x: cam.x, y: cam.y, scale: cam.scale, duration: 2.0, ease: 'power2.inOut' }, 8.0);
+      Cues.cue(tl, 8.0, 'riser', { dur: 2.0 });
       tl.to(Chart.bars.slice(3).map(b => b.col), { opacity: 0.18, duration: 1.0 }, 8.1);
       tl.to(['.ch-legend', '.ch-sub', '.ch-title', '.ch-src'], { opacity: 0.25, duration: 1.0 }, 8.1);
       return tl;
@@ -536,6 +552,8 @@
       Crab.emote(tl, 0, 'sly');
       say(tl, 0.1, 1.9, 'Барабанная дробь…', B);
       tl.to('#cr-armR', { rotation: -9, duration: 0.05, yoyo: true, repeat: 25, ease: 'none' }, 0.35);
+      Cues.cue(tl, 0.35, 'drumroll', { dur: 1.45 });
+      Cues.cue(tl, 1.8, 'crash');
       tl.to('#cr-armL', { rotation: -9, duration: 0.05, yoyo: true, repeat: 25, ease: 'none' }, 0.4);
       tl.to('#drum', { scaleY: 0.94, duration: 0.05, yoyo: true, repeat: 25, ease: 'none' }, 0.35);
       shake(tl, 0.6, 3, 1.0);
@@ -544,10 +562,13 @@
       tl.to([Chart.bars[0].col, Chart.bars[1].col], { opacity: 0.45, duration: 0.3 }, 1.8);
       tl.to(bar3.bar, { boxShadow: '0 0 0 7px rgba(255,216,77,1), 0 0 60px 14px rgba(255,216,77,.9)', duration: 0.3 }, 1.8);
       tl.to(bar3.medal, { autoAlpha: 1, scale: 1, duration: 0.5, ease: 'back.out(3)' }, 1.85);
+      Cues.cue(tl, 1.85, 'medal', { rank: 3 });
+      Cues.cue(tl, 1.9, 'reveal', { rank: 3 });
 
       // карточка вылезает из столбика
       tl.to('#card3', { autoAlpha: 1, scale: 1, x: 0, y: 0, duration: 0.7, ease: 'back.out(1.5)' }, 1.9);
       counters.push({ el: $('#card3 .c-num'), to: M[2].score, start: absStart + 2.1, dur: 0.9 });
+      Cues.cue(tl, 2.1, 'count', { to: M[2].score, dur: 0.9 });
       tl.to('#drum', { autoAlpha: 0, scale: 0.3, duration: 0.25 }, 2.0);
       Crab.prop(tl, 2.0, 'sticks', false);
       Crab.arm(tl, 2.0, 'both', 0, 0.2);
@@ -585,15 +606,18 @@
       tl.to(bar2.col, { opacity: 1, duration: 0.3 }, 0.35);
       tl.to(bar2.bar, { boxShadow: '0 0 0 7px rgba(255,216,77,1), 0 0 60px 14px rgba(255,216,77,.9)', duration: 0.3 }, 0.45);
       tl.to(bar2.medal, { autoAlpha: 1, scale: 1, duration: 0.5, ease: 'back.out(3)' }, 0.5);
+      Cues.cue(tl, 0.5, 'medal', { rank: 2 });
 
       // карточка падает сверху — с пылью
       tl.set('#card2', { autoAlpha: 1 }, 0.55);
       tl.to('#card2', { y: 0, rotation: -1.5, duration: 0.55, ease: 'power3.in' }, 0.55);
+      Cues.cue(tl, 0.55, 'fall', { dur: 0.55 });
       dust(tl, 1.1, CARD.x + 60, 780, 8, 140, '#E9DCCB');
       dust(tl, 1.1, CARD.x + CARD.w - 60, 780, 8, 140, '#E9DCCB');
       shake(tl, 1.1, 14, 0.4);
       tl.to('#card2', { keyframes: { y: [0, -18, 0] }, duration: 0.3, ease: 'power1.out' }, 1.12);
       counters.push({ el: $('#card2 .c-num'), to: M[1].score, start: absStart + 1.2, dur: 0.8 });
+      Cues.cue(tl, 1.2, 'count', { to: M[1].score, dur: 0.8 });
 
       // удивление → уважение
       Crab.emote(tl, 1.2, 'surprised');
@@ -622,6 +646,10 @@
       tl.to(bar2.bar, { boxShadow: '0 0 0 0px rgba(255,216,77,0), 0 0 0px 0px rgba(255,216,77,0)', duration: 0.3 }, 0);
       tl.to(bar1.col, { opacity: 1, duration: 0.3 }, 0);
       tl.to('#dim', { autoAlpha: 1, duration: 0.7 }, 0);
+      Cues.cue(tl, 0, 'dark', { dur: 2.35 });
+      Cues.cue(tl, 0.4, 'spot', { dur: 0.5 });
+      Cues.cue(tl, 0.9, 'spot', { dur: 0.4 });
+      Cues.cue(tl, 1.3, 'spotlock');
       Crab.emote(tl, 0, 'surprised');
       Crab.look(tl, 0.3, -12, -6);
 
@@ -635,6 +663,7 @@
 
       // корона падает на столбик
       tl.fromTo(Chart.crown, { autoAlpha: 1, y: -500, rotation: -20 }, { y: 0, rotation: 0, duration: 0.7, ease: 'bounce.out', immediateRender: false }, 1.6);
+      Cues.cue(tl, 1.6, 'crown', { dur: 0.7 });
       shake(tl, 1.95, 10, 0.3);
 
       // хлопушка с конфетти
@@ -652,6 +681,10 @@
       // карточка победителя
       tl.to('#card1', { autoAlpha: 1, scale: 1, rotation: 0, duration: 1.0, ease: 'elastic.out(1, 0.5)' }, 2.6);
       counters.push({ el: $('#card1 .c-num'), to: M[0].score, start: absStart + 2.8, dur: 1.0 });
+      Cues.cue(tl, 2.35, 'fanfare');
+      Cues.cue(tl, 2.6, 'reveal', { rank: 1 });
+      Cues.cue(tl, 2.8, 'count', { to: M[0].score, dur: 1.0 });
+      Cues.cue(tl, 3.4, 'shine');
       tl.to('#card1 .c-shine', { xPercent: 300, duration: 0.9, ease: 'power2.inOut' }, 3.4);
 
       // реакция по РЕАЛЬНЫМ данным: №1 — Claude
@@ -680,6 +713,7 @@
 
       // ПЕРЕХОД «пиксельное рассыпание»: закрываем экран плитками
       tl.to('.tile', { scale: 1.02, rotation: 0, duration: 0.25, ease: 'power2.out', stagger: { each: 0.0018, from: 'random' } }, 10.7);
+      Cues.cue(tl, 10.7, 'pixels', { dur: 0.5, dir: 'in' });
       return tl;
     },
 
@@ -698,11 +732,14 @@
       Crab.emote(tl, 0, 'happy');
       Crab.look(tl, 0, 6, -2);
       tl.to('.tile', { scale: 0, rotation: -45, duration: 0.25, ease: 'power2.in', stagger: { each: 0.0018, from: 'random' } }, 0.05);
+      Cues.cue(tl, 0.05, 'pixels', { dur: 0.5, dir: 'out' });
 
       tl.to('#s7 .sunburst', { rotation: 25, duration: 6, ease: 'none' }, 0);
 
       // мысль со смыслом
       tl.to('#s7L1', { autoAlpha: 1, y: 0, scale: 1, duration: 0.6, ease: 'back.out(2.5)' }, 0.45);
+      Cues.cue(tl, 0.45, 'line', { i: 0 });
+      Cues.cue(tl, 1.15, 'line', { i: 1 });
       tl.to('#s7L2', { autoAlpha: 1, y: 0, duration: 0.6, ease: 'back.out(2)' }, 1.15);
       tl.to('#footer', { autoAlpha: 1, duration: 0.4 }, 0.6);
 
@@ -717,6 +754,8 @@
       sparks(tl, 4.45, tip.x, tip.y);
       tl.set('#stageInner', { clipPath: `circle(1500px at ${tip.x}px ${tip.y}px)` }, 4.45);
       tl.to('#stageInner', { clipPath: `circle(0px at ${tip.x}px ${tip.y}px)`, duration: 0.8, ease: 'power3.in' }, 4.5);
+      Cues.cue(tl, 4.5, 'collapse', { dur: 0.8 });
+      Cues.cue(tl, 5.25, 'ding');
       tl.to('#footer', { color: '#F4E9DC', duration: 0.3 }, 4.8);
       const dot = fxEl('final-dot');
       $('#stage').appendChild(dot);

@@ -1,0 +1,821 @@
+{
+ "duration": 60,
+ "date": "16.10.2026",
+ "cues": [
+  {
+   "t": 0,
+   "type": "boing"
+  },
+  {
+   "t": 0,
+   "type": "section",
+   "name": "intro"
+  },
+  {
+   "t": 0.7,
+   "type": "titlebounce",
+   "dur": 0.9
+  },
+  {
+   "t": 0.9,
+   "type": "land"
+  },
+  {
+   "t": 0.9,
+   "type": "impact",
+   "amp": 8,
+   "dur": 0.25
+  },
+  {
+   "t": 1.25,
+   "type": "bubble"
+  },
+  {
+   "t": 1.3,
+   "type": "boing"
+  },
+  {
+   "t": 1.4,
+   "type": "type",
+   "n": 15,
+   "rate": 0.014
+  },
+  {
+   "t": 1.76,
+   "type": "snap"
+  },
+  {
+   "t": 1.94,
+   "type": "snap"
+  },
+  {
+   "t": 2.75,
+   "type": "unbubble"
+  },
+  {
+   "t": 3,
+   "type": "bubble"
+  },
+  {
+   "t": 3.15,
+   "type": "type",
+   "n": 36,
+   "rate": 0.014
+  },
+  {
+   "t": 3.904,
+   "type": "type",
+   "n": 24,
+   "rate": 0.014
+  },
+  {
+   "t": 5.65,
+   "type": "unbubble"
+  },
+  {
+   "t": 5.9,
+   "type": "walk",
+   "dur": 0.3,
+   "step": 0.09
+  },
+  {
+   "t": 6,
+   "type": "section",
+   "name": "aa"
+  },
+  {
+   "t": 6.16,
+   "type": "snap"
+  },
+  {
+   "t": 6.2,
+   "type": "curtain",
+   "dur": 0.85
+  },
+  {
+   "t": 6.2,
+   "type": "walk",
+   "dur": 0.85,
+   "step": 0.09
+  },
+  {
+   "t": 7.05,
+   "type": "whoosh",
+   "dur": 0.25
+  },
+  {
+   "t": 7.1,
+   "type": "prop",
+   "name": "glasses"
+  },
+  {
+   "t": 7.1,
+   "type": "bubble"
+  },
+  {
+   "t": 7.25,
+   "type": "type",
+   "n": 51,
+   "rate": 0.014
+  },
+  {
+   "t": 7.35,
+   "type": "prop",
+   "name": "pointer"
+  },
+  {
+   "t": 8.4,
+   "type": "card",
+   "i": 0
+  },
+  {
+   "t": 8.51,
+   "type": "card",
+   "i": 1
+  },
+  {
+   "t": 8.62,
+   "type": "card",
+   "i": 2
+  },
+  {
+   "t": 8.73,
+   "type": "card",
+   "i": 3
+  },
+  {
+   "t": 8.84,
+   "type": "card",
+   "i": 4
+  },
+  {
+   "t": 8.95,
+   "type": "card",
+   "i": 5
+  },
+  {
+   "t": 9.06,
+   "type": "card",
+   "i": 6
+  },
+  {
+   "t": 9.17,
+   "type": "card",
+   "i": 7
+  },
+  {
+   "t": 9.28,
+   "type": "card",
+   "i": 8
+  },
+  {
+   "t": 9.39,
+   "type": "card",
+   "i": 9
+  },
+  {
+   "t": 9.4,
+   "type": "unbubble"
+  },
+  {
+   "t": 9.7,
+   "type": "bubble"
+  },
+  {
+   "t": 9.85,
+   "type": "type",
+   "n": 47,
+   "rate": 0.014
+  },
+  {
+   "t": 10,
+   "type": "chip",
+   "i": 0
+  },
+  {
+   "t": 10.12,
+   "type": "chip",
+   "i": 1
+  },
+  {
+   "t": 10.24,
+   "type": "chip",
+   "i": 2
+  },
+  {
+   "t": 10.36,
+   "type": "chip",
+   "i": 3
+  },
+  {
+   "t": 10.48,
+   "type": "chip",
+   "i": 4
+  },
+  {
+   "t": 11.75,
+   "type": "unbubble"
+  },
+  {
+   "t": 11.9,
+   "type": "propoff",
+   "name": "pointer"
+  },
+  {
+   "t": 12,
+   "type": "bubble"
+  },
+  {
+   "t": 12.15,
+   "type": "type",
+   "n": 30,
+   "rate": 0.014
+  },
+  {
+   "t": 12.82,
+   "type": "type",
+   "n": 25,
+   "rate": 0.014
+  },
+  {
+   "t": 14.6,
+   "type": "propoff",
+   "name": "glasses"
+  },
+  {
+   "t": 14.7,
+   "type": "unbubble"
+  },
+  {
+   "t": 15,
+   "type": "section",
+   "name": "chart"
+  },
+  {
+   "t": 15.1,
+   "type": "iris",
+   "dur": 0.75
+  },
+  {
+   "t": 15.45,
+   "type": "jump",
+   "dur": 0.5
+  },
+  {
+   "t": 15.6,
+   "type": "prop",
+   "name": "mic"
+  },
+  {
+   "t": 15.9,
+   "type": "bar",
+   "i": 0,
+   "score": 58
+  },
+  {
+   "t": 15.95,
+   "type": "land"
+  },
+  {
+   "t": 15.95,
+   "type": "bubble"
+  },
+  {
+   "t": 16,
+   "type": "walk",
+   "dur": 3.4,
+   "step": 0.09
+  },
+  {
+   "t": 16.1,
+   "type": "type",
+   "n": 46,
+   "rate": 0.014
+  },
+  {
+   "t": 16.22,
+   "type": "bar",
+   "i": 1,
+   "score": 56
+  },
+  {
+   "t": 16.54,
+   "type": "bar",
+   "i": 2,
+   "score": 56
+  },
+  {
+   "t": 16.86,
+   "type": "bar",
+   "i": 3,
+   "score": 53
+  },
+  {
+   "t": 17.18,
+   "type": "bar",
+   "i": 4,
+   "score": 53
+  },
+  {
+   "t": 17.5,
+   "type": "bar",
+   "i": 5,
+   "score": 53
+  },
+  {
+   "t": 17.82,
+   "type": "bar",
+   "i": 6,
+   "score": 52
+  },
+  {
+   "t": 18.1,
+   "type": "unbubble"
+  },
+  {
+   "t": 18.14,
+   "type": "bar",
+   "i": 7,
+   "score": 52
+  },
+  {
+   "t": 18.4,
+   "type": "bubble"
+  },
+  {
+   "t": 18.46,
+   "type": "bar",
+   "i": 8,
+   "score": 46
+  },
+  {
+   "t": 18.55,
+   "type": "type",
+   "n": 41,
+   "rate": 0.014
+  },
+  {
+   "t": 18.78,
+   "type": "bar",
+   "i": 9,
+   "score": 46
+  },
+  {
+   "t": 19.6,
+   "type": "jump",
+   "dur": 0.55
+  },
+  {
+   "t": 20.15,
+   "type": "land"
+  },
+  {
+   "t": 20.4,
+   "type": "unbubble"
+  },
+  {
+   "t": 20.7,
+   "type": "bubble"
+  },
+  {
+   "t": 20.85,
+   "type": "type",
+   "n": 48,
+   "rate": 0.014
+  },
+  {
+   "t": 20.9,
+   "type": "gap"
+  },
+  {
+   "t": 22.9,
+   "type": "unbubble"
+  },
+  {
+   "t": 23,
+   "type": "propoff",
+   "name": "mic"
+  },
+  {
+   "t": 23,
+   "type": "riser",
+   "dur": 2
+  },
+  {
+   "t": 23.2,
+   "type": "bubble"
+  },
+  {
+   "t": 23.35,
+   "type": "type",
+   "n": 23,
+   "rate": 0.014
+  },
+  {
+   "t": 24.9,
+   "type": "unbubble"
+  },
+  {
+   "t": 25,
+   "type": "prop",
+   "name": "sticks"
+  },
+  {
+   "t": 25,
+   "type": "section",
+   "name": "third"
+  },
+  {
+   "t": 25.1,
+   "type": "bubble"
+  },
+  {
+   "t": 25.25,
+   "type": "type",
+   "n": 16,
+   "rate": 0.014
+  },
+  {
+   "t": 25.35,
+   "type": "drumroll",
+   "dur": 1.45
+  },
+  {
+   "t": 25.6,
+   "type": "impact",
+   "amp": 3,
+   "dur": 1
+  },
+  {
+   "t": 26.7,
+   "type": "unbubble"
+  },
+  {
+   "t": 26.8,
+   "type": "crash"
+  },
+  {
+   "t": 26.85,
+   "type": "medal",
+   "rank": 3
+  },
+  {
+   "t": 26.9,
+   "type": "reveal",
+   "rank": 3
+  },
+  {
+   "t": 27,
+   "type": "propoff",
+   "name": "sticks"
+  },
+  {
+   "t": 27.1,
+   "type": "count",
+   "to": 56,
+   "dur": 0.9
+  },
+  {
+   "t": 27.6,
+   "type": "bubble"
+  },
+  {
+   "t": 27.69,
+   "type": "clap",
+   "n": 0
+  },
+  {
+   "t": 27.75,
+   "type": "type",
+   "n": 47,
+   "rate": 0.014
+  },
+  {
+   "t": 27.95,
+   "type": "clap",
+   "n": 1
+  },
+  {
+   "t": 28.21,
+   "type": "clap",
+   "n": 2
+  },
+  {
+   "t": 28.47,
+   "type": "clap",
+   "n": 3
+  },
+  {
+   "t": 30.1,
+   "type": "unbubble"
+  },
+  {
+   "t": 30.4,
+   "type": "bubble"
+  },
+  {
+   "t": 30.55,
+   "type": "type",
+   "n": 56,
+   "rate": 0.014
+  },
+  {
+   "t": 33.5,
+   "type": "unbubble"
+  },
+  {
+   "t": 34,
+   "type": "whoosh",
+   "dur": 0.45
+  },
+  {
+   "t": 34,
+   "type": "section",
+   "name": "second"
+  },
+  {
+   "t": 34.5,
+   "type": "medal",
+   "rank": 2
+  },
+  {
+   "t": 34.55,
+   "type": "fall",
+   "dur": 0.55
+  },
+  {
+   "t": 35.1,
+   "type": "impact",
+   "amp": 14,
+   "dur": 0.4
+  },
+  {
+   "t": 35.2,
+   "type": "count",
+   "to": 56,
+   "dur": 0.8
+  },
+  {
+   "t": 35.2,
+   "type": "boing"
+  },
+  {
+   "t": 35.3,
+   "type": "jump",
+   "dur": 0.35
+  },
+  {
+   "t": 35.35,
+   "type": "bubble"
+  },
+  {
+   "t": 35.5,
+   "type": "type",
+   "n": 24,
+   "rate": 0.014
+  },
+  {
+   "t": 35.65,
+   "type": "land"
+  },
+  {
+   "t": 37.5,
+   "type": "unbubble"
+  },
+  {
+   "t": 37.8,
+   "type": "bubble"
+  },
+  {
+   "t": 37.95,
+   "type": "type",
+   "n": 59,
+   "rate": 0.014
+  },
+  {
+   "t": 39.06,
+   "type": "snap"
+  },
+  {
+   "t": 39.24,
+   "type": "snap"
+  },
+  {
+   "t": 40.4,
+   "type": "unbubble"
+  },
+  {
+   "t": 40.7,
+   "type": "bubble"
+  },
+  {
+   "t": 40.85,
+   "type": "type",
+   "n": 42,
+   "rate": 0.014
+  },
+  {
+   "t": 42.65,
+   "type": "unbubble"
+  },
+  {
+   "t": 43,
+   "type": "dark",
+   "dur": 2.35
+  },
+  {
+   "t": 43,
+   "type": "boing"
+  },
+  {
+   "t": 43,
+   "type": "section",
+   "name": "first"
+  },
+  {
+   "t": 43.4,
+   "type": "spot",
+   "dur": 0.5
+  },
+  {
+   "t": 43.9,
+   "type": "spot",
+   "dur": 0.4
+  },
+  {
+   "t": 44.3,
+   "type": "spotlock"
+  },
+  {
+   "t": 44.6,
+   "type": "crown",
+   "dur": 0.7
+  },
+  {
+   "t": 44.9,
+   "type": "prop",
+   "name": "popper"
+  },
+  {
+   "t": 44.95,
+   "type": "impact",
+   "amp": 10,
+   "dur": 0.3
+  },
+  {
+   "t": 45.35,
+   "type": "pop"
+  },
+  {
+   "t": 45.35,
+   "type": "impact",
+   "amp": 12,
+   "dur": 0.4
+  },
+  {
+   "t": 45.35,
+   "type": "fanfare"
+  },
+  {
+   "t": 45.4,
+   "type": "sparkle",
+   "dur": 4.1
+  },
+  {
+   "t": 45.6,
+   "type": "reveal",
+   "rank": 1
+  },
+  {
+   "t": 45.8,
+   "type": "count",
+   "to": 58,
+   "dur": 1
+  },
+  {
+   "t": 45.9,
+   "type": "propoff",
+   "name": "popper"
+  },
+  {
+   "t": 45.9,
+   "type": "bubble"
+  },
+  {
+   "t": 46.05,
+   "type": "type",
+   "n": 33,
+   "rate": 0.014
+  },
+  {
+   "t": 46.4,
+   "type": "shine"
+  },
+  {
+   "t": 48,
+   "type": "unbubble"
+  },
+  {
+   "t": 48.3,
+   "type": "bubble"
+  },
+  {
+   "t": 48.45,
+   "type": "type",
+   "n": 32,
+   "rate": 0.014
+  },
+  {
+   "t": 50.4,
+   "type": "unbubble"
+  },
+  {
+   "t": 50.4,
+   "type": "walk",
+   "dur": 0.35,
+   "step": 0.09
+  },
+  {
+   "t": 50.75,
+   "type": "prop",
+   "name": "sign"
+  },
+  {
+   "t": 50.75,
+   "type": "bubble"
+  },
+  {
+   "t": 50.9,
+   "type": "type",
+   "n": 50,
+   "rate": 0.014
+  },
+  {
+   "t": 53.45,
+   "type": "unbubble"
+  },
+  {
+   "t": 53.5,
+   "type": "propoff",
+   "name": "sign"
+  },
+  {
+   "t": 53.7,
+   "type": "pixels",
+   "dur": 0.5,
+   "dir": "in"
+  },
+  {
+   "t": 54,
+   "type": "section",
+   "name": "final"
+  },
+  {
+   "t": 54.05,
+   "type": "pixels",
+   "dur": 0.5,
+   "dir": "out"
+  },
+  {
+   "t": 54.45,
+   "type": "line",
+   "i": 0
+  },
+  {
+   "t": 55.15,
+   "type": "line",
+   "i": 1
+  },
+  {
+   "t": 55.9,
+   "type": "bubble"
+  },
+  {
+   "t": 56.05,
+   "type": "type",
+   "n": 20,
+   "rate": 0.014
+  },
+  {
+   "t": 58.1,
+   "type": "unbubble"
+  },
+  {
+   "t": 58.46,
+   "type": "snap"
+  },
+  {
+   "t": 58.5,
+   "type": "collapse",
+   "dur": 0.8
+  },
+  {
+   "t": 59.25,
+   "type": "ding"
+  },
+  {
+   "t": 60,
+   "type": "end"
+  }
+ ]
+}

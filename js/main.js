@@ -64,6 +64,11 @@
   // расписание эмоций → абсолютное время мастера
   Crab.resolve(master);
 
+  // звуковые события → абсолютное время (их читает Python-синтезатор)
+  CHAPTERS.forEach(([k]) => Cues.cue(master, S[k], 'section', { name: k }));
+  Cues.cue(master, DURATION, 'end');
+  Cues.resolve(master);
+
   // ровно 60 секунд
   master.set({}, {}, DURATION);
   if (master.duration() > DURATION + 0.001) {
